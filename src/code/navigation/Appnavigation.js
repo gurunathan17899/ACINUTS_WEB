@@ -11,6 +11,7 @@ import Search from '../Screen/Search';
 import CategoryItemList from '../Screen/CategoryItemList';
 import ItemDetails from '../Screen/ItemDetails';
 import Cart from '../Screen/Cart';
+import MyOrders from '../Screen/Myorders';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,13 +24,13 @@ const Appnavigation = () => {
           component={Launch}
           options={{headerShown: false}}
         />
-        
+
         <Stack.Screen
           name="Dashboard"
           component={AllCategories}
           options={{headerShown: false}}
         />
-        
+
         <Stack.Screen
           name="CategoryItemList"
           component={CategoryItemList}
@@ -42,9 +43,15 @@ const Appnavigation = () => {
           options={{headerShown: false}}
         />
 
-      <Stack.Screen
+        <Stack.Screen
           name="Cart"
           component={Cart}
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="MyOrders"
+          component={MyOrders}
           options={{headerShown: false}}
         />
 

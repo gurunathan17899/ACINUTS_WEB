@@ -401,7 +401,9 @@ const AllCategories = ({route, navigation}) => {
               style={{marginRight: 12}}>
                 <Text style={styles.heading}>Cart</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{marginRight: 12}}>
+              <TouchableOpacity 
+                onPress={()=>navigation.navigate("MyOrders")}
+              style={{marginRight: 12}}>
                 <Text style={styles.heading}>Orders</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{marginRight: 12}}>

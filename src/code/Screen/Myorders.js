@@ -6,35 +6,30 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  Modal,
-  TouchableWithoutFeedback,
-  TextInput,
+  Platform  
 } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import FastImage from 'react-native-fast-image';
+//import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+//import Ionicons from 'react-native-vector-icons/Ionicons';
+//import FastImage from 'react-native-fast-image';
 import {useFocusEffect} from '@react-navigation/native';
 import {CancelOrder, getUserOrders} from '../../Network/API';
 import {convertToCustomDateFormat} from '../../Helper/utils';
-import {MyContext} from '../../Context/MyContext';
-import LoaderKit from 'react-native-loader-kit';
-import {showMessage} from 'react-native-flash-message';
+//import {MyContext} from '../../Context/MyContext';
+//import LoaderKit from 'react-native-loader-kit';
+//import {showMessage} from 'react-native-flash-message';
 import {
   colors,
   secondaryFontfamily,
   primaryFontfamily,
-} from '../../Configuration';
+} from "../Configuration";
 
 const MyOrders = ({navigation}) => {
-  const {UserDetails,Token} = useContext(MyContext);
+//  const {UserDetails,Token} = useContext(MyContext);
+const UserDetails={id:1,username:'guru'}
+
   const [showLoader, setShowLoader] = useState(true);
   const [Data, setData] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [selectedReason, setSelectedReason] = useState(null);
-  const [additionalInfo, setAdditionalInfo] = useState('');
-
+  
   useFocusEffect(
     React.useCallback(() => {
       setShowLoader(true)
@@ -113,15 +108,22 @@ const MyOrders = ({navigation}) => {
   
       {showLoader ? (
         <View style={styles.loaderContainer}>
+          {/*
           <LoaderKit
             style={styles.loader}
             name={'BallBeat'}
             color={colors.primaryColor}
           />
+          */}
+
         </View>
       ) : Data.length === 0 ? (
         <View style={styles.noOrdersContainer}>
+          
+          {/*
           <Ionicons name="bag-handle-outline" size={50} color={colors.primaryColor} />
+          */}
+
           <Text style={styles.noOrdersText}>No Orders Found</Text>
         </View>
       ) : (
@@ -166,7 +168,7 @@ const MyOrders = ({navigation}) => {
                     (item, index) =>
                       item.imageurl !== '' && (
                         <View key={index}>
-                          <FastImage
+                          <Image
                             style={styles.productImage}
                             source={{
                               uri: item.imageurl,
@@ -198,11 +200,13 @@ const MyOrders = ({navigation}) => {
                 </View>
               </View>
               <View style={{position: 'absolute', right: 20, marginTop: 19}}>
+                {/*
                 <MaterialIcons
                   name="arrow-forward-ios"
                   size={18}
                   color={colors.primaryColor}
                 />
+                */}
               </View>
             
             </TouchableOpacity>
