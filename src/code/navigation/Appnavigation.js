@@ -8,6 +8,9 @@ import Signup from '../Screen/Signup';
 import AllCategories from '../Screen/AllCategories';
 import Dashboard from '../Screen/Dashboard';
 import Search from '../Screen/Search';
+import CategoryItemList from '../Screen/CategoryItemList';
+import ItemDetails from '../Screen/ItemDetails';
+import Cart from '../Screen/Cart';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,11 +23,31 @@ const Appnavigation = () => {
           component={Launch}
           options={{headerShown: false}}
         />
+        
         <Stack.Screen
           name="Dashboard"
-          component={Dashboard}
+          component={AllCategories}
           options={{headerShown: false}}
         />
+        
+        <Stack.Screen
+          name="CategoryItemList"
+          component={CategoryItemList}
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="ItemDetails"
+          component={ItemDetails}
+          options={{headerShown: false}}
+        />
+
+      <Stack.Screen
+          name="Cart"
+          component={Cart}
+          options={{headerShown: false}}
+        />
+
         <Stack.Screen
           name="Search"
           component={Search}
