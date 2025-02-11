@@ -58,7 +58,8 @@ export const GetProductList = () => {
     .get(`${ServerURL}/getItemlist`)
     .then(function (response) {
       // handle success
-      //console.log('res' + JSON.stringify(response));
+      alert
+      console.log('res' + JSON.stringify(response));
       return response;
     })
     .catch(function (error) {

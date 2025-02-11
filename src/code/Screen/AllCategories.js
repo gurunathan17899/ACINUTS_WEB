@@ -170,10 +170,10 @@ const AllCategories = ({route, navigation}) => {
   const GetProductListDetails = () => {
     GetProductList()
       .then(res => {
-        // console.log(
-        //   'new guru GetAppointmentVerifiedByBotAndTotalAppointmentVerified',
-        //   JSON.stringify(res.data),
-        // );
+        console.log(
+          'new guru GetAppointmentVerifiedByBotAndTotalAppointmentVerified',
+          JSON.stringify(res.data),
+        );
         if (res.data !== undefined) {
           setItemList(res.data);
         } else {
@@ -188,21 +188,21 @@ const AllCategories = ({route, navigation}) => {
 
   useEffect(() => {
     console.log('UserDetails' + JSON.stringify(UserDetails));
-    const listenToNotifications = () => {
-      try {
-        getFCMToken(UserDetails.user_id, UserDetails.mobileno);
-        requestUserPermission();
-        onNotificationOpenedAppFromQuit();
-        listenToBackgroundNotifications();
-        listenToForegroundNotifications();
-        onNotificationOpenedAppFromBackground();
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    if (Platform.OS === 'android') {
-      listenToNotifications();
-    }
+    // const listenToNotifications = () => {
+    //   try {
+    //     getFCMToken(UserDetails.user_id, UserDetails.mobileno);
+    //     requestUserPermission();
+    //     onNotificationOpenedAppFromQuit();
+    //     listenToBackgroundNotifications();
+    //     listenToForegroundNotifications();
+    //     onNotificationOpenedAppFromBackground();
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
+    // if (Platform.OS === 'android') {
+    //   listenToNotifications();
+    // }
     GetProductListDetails();
   }, [navigation]);
 

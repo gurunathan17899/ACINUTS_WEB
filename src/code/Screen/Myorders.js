@@ -14,7 +14,6 @@ import {
 import {useFocusEffect} from '@react-navigation/native';
 import {CancelOrder, getUserOrders} from '../../Network/API';
 import {convertToCustomDateFormat} from '../../Helper/utils';
-//import {MyContext} from '../../Context/MyContext';
 //import LoaderKit from 'react-native-loader-kit';
 //import {showMessage} from 'react-native-flash-message';
 import {
@@ -22,10 +21,10 @@ import {
   secondaryFontfamily,
   primaryFontfamily,
 } from "../Configuration";
+import { MyContext } from '../../Context/MyContext';
 
 const MyOrders = ({navigation}) => {
-//  const {UserDetails,Token} = useContext(MyContext);
-const UserDetails={id:1,username:'guru'}
+ const {UserDetails,Token} = useContext(MyContext);
 
   const [showLoader, setShowLoader] = useState(true);
   const [Data, setData] = useState([]);
@@ -172,9 +171,9 @@ const UserDetails={id:1,username:'guru'}
                             style={styles.productImage}
                             source={{
                               uri: item.imageurl,
-                              priority: FastImage.priority.high,
+                              
                             }}
-                            resizeMode={FastImage.resizeMode.contain}
+                            //resizeMode={FastImage.resizeMode.contain}
                           />
                         </View>
                       ),

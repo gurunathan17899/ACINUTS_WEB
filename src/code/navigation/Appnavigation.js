@@ -12,6 +12,7 @@ import CategoryItemList from '../Screen/CategoryItemList';
 import ItemDetails from '../Screen/ItemDetails';
 import Cart from '../Screen/Cart';
 import MyOrders from '../Screen/Myorders';
+import PlaceOrder from '../Screen/PlaceOrder';
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +53,12 @@ const Appnavigation = () => {
         <Stack.Screen
           name="MyOrders"
           component={MyOrders}
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="Buynow"
+          component={PlaceOrder}
           options={{headerShown: false}}
         />
 

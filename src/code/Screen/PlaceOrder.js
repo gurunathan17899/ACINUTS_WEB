@@ -7,27 +7,30 @@ import {
   Platform,
   SafeAreaView,
   Linking,
+  Modal
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {primaryFontfamily, secondaryFontfamily} from '../Configuration';
 import {colors} from '../Configuration';
-import Dots from 'react-native-dots-pagination';
-import Entypo from 'react-native-vector-icons/Entypo';
+//import Dots from 'react-native-dots-pagination';
+//import Entypo from 'react-native-vector-icons/Entypo';
 import {useWindowDimensions} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {MyContext} from '../Context/MyContext';
+
+// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+// import AntDesign from 'react-native-vector-icons/AntDesign';
+// import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+//import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+import { MyContext } from '../../Context/MyContext';
 import {useContext} from 'react';
-import {getPaytmToken, GetUserShippingAddress, saveOrder} from '../Network/API';
-import {showMessage} from 'react-native-flash-message';
-import {getFutureDateInCustomFormat} from '../Helper/utils';
-import {Modal} from 'react-native-paper';
-import LoaderKit from 'react-native-loader-kit';
-import {initWithParams} from 'react-native-upi-payments';
-import {mid, PAYTM_UPI_MID, ServerURL} from '../Network/Config';
+import {getPaytmToken, GetUserShippingAddress, saveOrder} from "../../Network/API";
+//import {showMessage} from 'react-native-flash-message';
+import {getFutureDateInCustomFormat} from '../../Helper/utils';
+
+//import LoaderKit from 'react-native-loader-kit';
+//import {initWithParams} from 'react-native-upi-payments';
+import { ServerURL } from '../../Network/Config';
 import axios from 'axios';
 
 const PlaceOrder = ({navigation, route}) => {
@@ -422,7 +425,9 @@ const PlaceOrder = ({navigation, route}) => {
               <TouchableOpacity
                 onPress={() => navigation.goBack()}
                 style={{marginRight: 10}}>
+                  {/*
                 <FontAwesome name="angle-left" size={33} color="white" />
+                */}
               </TouchableOpacity>
             </View>
           ),
@@ -459,7 +464,9 @@ const PlaceOrder = ({navigation, route}) => {
           <TouchableOpacity
             onPress={() => navigation.navigate('ShippingAddress', {item: {}})}
             style={{position: 'absolute', right: 20, flexDirection: 'row'}}>
+            {/*
             <Entypo name="squared-plus" size={20} color={colors.primaryColor} />
+            */}
             <Text
               style={{
                 fontFamily: secondaryFontfamily,
@@ -521,11 +528,13 @@ const PlaceOrder = ({navigation, route}) => {
                         onPress={() =>
                           navigation.navigate('ShippingAddress', {item: item})
                         }>
+                          {/*
                         <MaterialIcons
                           name="edit"
                           color={colors.primaryColor}
                           size={18}
                         />
+                        */}
                       </TouchableOpacity>
                     </View>
                     <Text
@@ -560,6 +569,7 @@ const PlaceOrder = ({navigation, route}) => {
                         );
                       }}
                       style={{position: 'absolute', top: 10, right: 10}}>
+                        {/*
                       <MaterialCommunityIcons
                         name={
                           item.Address_Code == activeShippingCode
@@ -569,6 +579,7 @@ const PlaceOrder = ({navigation, route}) => {
                         color={colors.primaryColor}
                         size={22}
                       />
+                      */}
                     </TouchableOpacity>
                     {/*
                   <TouchableOpacity
@@ -594,11 +605,13 @@ const PlaceOrder = ({navigation, route}) => {
               )}
             />
             <View style={{marginTop: 10}}>
+              {/*
               <Dots
                 length={shipingAddress.length}
                 active={activePageIndex}
                 activeColor={colors.primaryColor}
               />
+              */}
             </View>
           </View>
         ) : (
@@ -628,11 +641,13 @@ const PlaceOrder = ({navigation, route}) => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
+                {/*
               <Entypo
                 name="squared-plus"
                 size={32}
                 color={colors.primaryColor}
               />
+              */}
               <Text
                 style={{
                   fontFamily: secondaryFontfamily,
@@ -704,12 +719,14 @@ const PlaceOrder = ({navigation, route}) => {
             }}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <View style={{width: '10%', alignItems: 'center'}}>
+                {/*
                 <MaterialCommunityIcons
                   name="cash"
                   size={24}
                   color={colors.primaryColor}
                   style={{marginLeft: 10}}
                 />
+                */}
               </View>
 
               <Text
@@ -723,11 +740,13 @@ const PlaceOrder = ({navigation, route}) => {
               </Text>
               {ActivePaymentMethod === 'COD' && (
                 <View style={{position: 'absolute', right: 10}}>
+                  {/*
                   <AntDesign
                     name="checkcircle"
                     size={20}
                     color={colors.primaryColor}
                   />
+                  */}
                 </View>
               )}
             </View>
@@ -760,12 +779,14 @@ const PlaceOrder = ({navigation, route}) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
+                  {/*
                 <FontAwesome
                   name="credit-card-alt"
                   size={14}
                   color={colors.primaryColor}
                   style={{marginLeft: 10}}
                 />
+                */}
               </View>
               <Text
                 style={{
@@ -781,11 +802,13 @@ const PlaceOrder = ({navigation, route}) => {
             </View>
             {ActivePaymentMethod === 'UPI Payment' && (
               <View style={{position: 'absolute', right: 10}}>
+                {/*
                 <AntDesign
                   name="checkcircle"
                   size={20}
                   color={colors.primaryColor}
                 />
+                */}
               </View>
             )}
           </TouchableOpacity>
@@ -970,11 +993,13 @@ const PlaceOrder = ({navigation, route}) => {
               justifyContent: 'center',
               //backgroundColor: 'red',
             }}>
+              {/*
             <LoaderKit
               style={{width: 50, height: 50}}
               name={'BallSpinFadeLoader'} // Optional: see list of animations below
               color={colors.primaryColor} // Optional: color can be: 'red', 'green',... or '#ddd', '#ffffff',...
             />
+            */}
 
             <View
               style={{

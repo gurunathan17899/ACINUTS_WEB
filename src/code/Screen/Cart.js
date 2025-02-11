@@ -8,30 +8,25 @@ import {
   TouchableOpacity,
   View,
   Alert,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
-import React, {useState,useEffect,useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 //import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {
-  LightFontfamily,
-  colors,  
-  secondaryFontfamily,
-} from '../Configuration';
-import { DeleteCartItem, GetUserCartList } from '../../Network/API';
+import {LightFontfamily, colors, secondaryFontfamily} from '../Configuration';
+import {DeleteCartItem, GetUserCartList} from '../../Network/API';
 //import LoaderKit from 'react-native-loader-kit'
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
+import { MyContext } from '../../Context/MyContext';
 //import { showMessage } from 'react-native-flash-message';
 //import AntDesign from "react-native-vector-icons/AntDesign"
 //import IonIcons from "react-native-vector-icons/Ionicons"
-//import { MyContext } from '../../Context/MyContext';
-//import { useContext } from 'react';
+import { useContext } from 'react';
 //import FastImage from 'react-native-fast-image';
 
 const Cart = ({navigation}) => {
-
-  //const {UserDetails,Token} = useContext(MyContext)
-  const [showLoader,setShowLoader] = useState(true);
-  const handlePress = (itemcode, qty,uom) => {
+  const {Token} = useContext(MyContext)
+  const [showLoader, setShowLoader] = useState(true);
+  const handlePress = (itemcode, qty, uom) => {
     const updatedData = ItemList.map(item =>
       item.itemcode === itemcode && item.selectedCategory === uom
         ? {...item, qty: qty + 1}
@@ -39,8 +34,8 @@ const Cart = ({navigation}) => {
     );
     setItemList(updatedData);
   };
-  const [SomeItemDeleted,setSomeItemDeleted] = useState(true)
-  const [selectedItem,setSelectedItem] = useState([])
+  const [SomeItemDeleted, setSomeItemDeleted] = useState(true);
+  const [selectedItem, setSelectedItem] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
   const showModal = () => {
@@ -51,39 +46,37 @@ const Cart = ({navigation}) => {
     setModalVisible(false);
   };
 
-
-
-const handleMinus = (itemcode, qty,uom) => {
-  if (qty === 1) {
-    // Show alert if quantity is about to reach zero
-    Alert.alert(
-      'Delete Item',
-      'Do you want to delete this item?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'OK',
-          onPress: () => {
-            // Remove the item from the backend and the local state
-            DeleteItemFromCart(itemcode,uom);
+  const handleMinus = (itemcode, qty, uom) => {
+    if (qty === 1) {
+      // Show alert if quantity is about to reach zero
+      Alert.alert(
+        'Delete Item',
+        'Do you want to delete this item?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
           },
-        },
-      ],
-      { cancelable: false }
-    );
-  } else {
-    // Update quantity if it's greater than 1
-    const updatedminus = ItemList.map(item =>
-      item.itemcode === itemcode && item.selectedCategory === uom
-        ? { ...item, qty: qty - 1 }
-        : item,
-    );
-    setItemList(updatedminus);
-  }
-};
+          {
+            text: 'OK',
+            onPress: () => {
+              // Remove the item from the backend and the local state
+              DeleteItemFromCart(itemcode, uom);
+            },
+          },
+        ],
+        {cancelable: false},
+      );
+    } else {
+      // Update quantity if it's greater than 1
+      const updatedminus = ItemList.map(item =>
+        item.itemcode === itemcode && item.selectedCategory === uom
+          ? {...item, qty: qty - 1}
+          : item,
+      );
+      setItemList(updatedminus);
+    }
+  };
 
   const calculateTotalPrice = () => {
     return ItemList.reduce((total, item) => {
@@ -91,53 +84,49 @@ const handleMinus = (itemcode, qty,uom) => {
     }, 0);
   };
 
-  const DeleteItemFromCart = (itemcode,uom)=>{
+  const DeleteItemFromCart = (itemcode, uom) => {
     //navigation.navigate('Buynow')
-    DeleteCartItem(Token,itemcode,uom)
-    .then(res => {
-      console.log('Delete cart list response', JSON.stringify(res));
-      if (res.data.issuccess == true) {
-        //alert("item removed success")
-        setItemList([])
-        showMessage({
-          message: 'Item Remove Successfully.',
-          //description: "Password must be at least 4 characters long.",
-          type: 'warning',
-        });
-        setSomeItemDeleted(true)
-       setShowLoader(true);
-        setTimeout(() => {
-          GetUserCartList(Token).then(res => {
-            console.log('User cart list items', JSON.stringify(res));
-
-            if (res.data !== undefined) {
-              setItemList(res.data.Items);
-              setShowLoader(false);
-            } else {
-              setItemList([]);
-              setShowLoader(false);
-            }
+    DeleteCartItem(Token, itemcode, uom)
+      .then(res => {
+        console.log('Delete cart list response', JSON.stringify(res));
+        if (res.data.issuccess == true) {
+          //alert("item removed success")
+          setItemList([]);
+          showMessage({
+            message: 'Item Remove Successfully.',
+            //description: "Password must be at least 4 characters long.",
+            type: 'warning',
           });
-        }, 100);      
-        
-      }
-    })
-    .catch(error => {
-          console.error('Error occurred:', error);
-      console.log(
-        'problem in fetch data for getProductItemDetails ',
-      );
-    });
-  }
+          setSomeItemDeleted(true);
+          setShowLoader(true);
+          setTimeout(() => {
+            GetUserCartList(Token).then(res => {
+              console.log('User cart list items', JSON.stringify(res));
+
+              if (res.data !== undefined) {
+                setItemList(res.data.Items);
+                setShowLoader(false);
+              } else {
+                setItemList([]);
+                setShowLoader(false);
+              }
+            });
+          }, 100);
+        }
+      })
+      .catch(error => {
+        console.error('Error occurred:', error);
+        console.log('problem in fetch data for getProductItemDetails ');
+      });
+  };
 
   const [ItemList, setItemList] = useState([]);
   const hasFetchedData = useRef(false);
 
-
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true;
-      setShowLoader(true)
+      setShowLoader(true);
 
       const fetchData = async () => {
         try {
@@ -146,10 +135,10 @@ const handleMinus = (itemcode, qty,uom) => {
           if (isActive) {
             if (res.data !== undefined) {
               setItemList(res.data.Items);
-              setShowLoader(false)
+              setShowLoader(false);
             } else {
               setItemList([]);
-              setShowLoader(false)
+              setShowLoader(false);
             }
           }
         } catch (error) {
@@ -164,7 +153,7 @@ const handleMinus = (itemcode, qty,uom) => {
       return () => {
         isActive = false;
       };
-    }, [setSomeItemDeleted])
+    }, [setSomeItemDeleted]),
   );
 
   return showLoader == true ? (
@@ -175,7 +164,6 @@ const handleMinus = (itemcode, qty,uom) => {
             fontSize: 20,
             fontWeight: '600',
             color: colors.primaryColor,
-            
           }}>
           Your Cart
         </Text>
@@ -183,7 +171,7 @@ const handleMinus = (itemcode, qty,uom) => {
 
       <View
         style={{alignItems: 'center', justifyContent: 'center', height: '90%'}}>
-          {/*
+        {/*
         <LoaderKit
           style={{width: 50, height: 50}}
           name={'BallBeat'} // Optional: see list of animations below
@@ -200,10 +188,19 @@ const handleMinus = (itemcode, qty,uom) => {
               fontSize: 20,
               fontWeight: '600',
               color: colors.primaryColor,
-            
             }}>
             Your Cart
           </Text>
+          <TouchableOpacity 
+          onPress={()=>navigation.goBack()}
+          style={{position: 'absolute', left: 20}}>
+            <Text
+              style={{
+                color: colors.primaryColor,
+                fontSize: 16,
+                fontWeight: '600',
+              }}>{`< Home`}</Text>
+          </TouchableOpacity>
         </View>
         <View
           style={{
@@ -221,7 +218,7 @@ const handleMinus = (itemcode, qty,uom) => {
           */}
             <Image
               //source={require('../../assets/app_icons/cart11.png')}
-              source={require("../Assets/app_icons/cart11.png")}
+              source={require('../Assets/app_icons/cart11.png')}
               style={{height: 300, width: 250}}
             />
 
@@ -284,8 +281,6 @@ const handleMinus = (itemcode, qty,uom) => {
           style={{
             alignItems: 'center',
             marginTop: 16,
-            // height: '4%',
-            //backgroundColor: 'red',
             justifyContent: 'center',
           }}>
           <Text
@@ -293,10 +288,19 @@ const handleMinus = (itemcode, qty,uom) => {
               fontSize: 20,
               fontWeight: '600',
               color: colors.primaryColor,
-              
             }}>
             Your Cart
           </Text>
+          <TouchableOpacity 
+          onPress={()=>navigation.goBack()}
+          style={{position: 'absolute', left: 20}}>
+            <Text
+              style={{
+                color: colors.primaryColor,
+                fontSize: 16,
+                fontWeight: '600',
+              }}>{`< Home`}</Text>
+          </TouchableOpacity>
         </View>
         <View style={{marginTop: 4, height: '84%', paddingTop: 10}}>
           <FlatList
@@ -327,7 +331,7 @@ const handleMinus = (itemcode, qty,uom) => {
                   onPress={() =>
                     DeleteItemFromCart(item.itemcode, item.selectedCategory)
                   }>
-                    {/*
+                  {/*
                   <AntDesign name="closecircle" size={14} color={'lightgray'} />
                   */}
                 </TouchableOpacity>
@@ -346,7 +350,6 @@ const handleMinus = (itemcode, qty,uom) => {
                   source={{
                     uri: item.imageurl,
                     //headers: {Authorization: 'someAuthToken'},
-                    
                   }}
                   //resizeMode={FastImage.resizeMode.contain}
                 />
@@ -365,7 +368,7 @@ const handleMinus = (itemcode, qty,uom) => {
                           fontSize: 18,
                           fontWeight: '400',
                           color: 'black',
-                          
+
                           flex: 1, // Allow text to take up remaining space
                           marginRight: 5,
                         }}>
@@ -437,7 +440,7 @@ const handleMinus = (itemcode, qty,uom) => {
                         item.selectedCategory,
                       )
                     }>
-                      {/*
+                    {/*
                     <FontAwesome name="minus" size={20} color={'#8cc751'} />
                     */}
                   </TouchableOpacity>
@@ -482,7 +485,6 @@ const handleMinus = (itemcode, qty,uom) => {
                   fontWeight: '600',
                   color: 'black',
                   //marginLeft: 200,
-                  
                 }}>
                 Total:
               </Text>
@@ -493,7 +495,6 @@ const handleMinus = (itemcode, qty,uom) => {
                     fontSize: 16,
                     fontWeight: '600',
                     color: colors.primaryColor,
-                    
                   }}>
                   {`   `}Rs.{ItemList?.length > 0 ? calculateTotalPrice() : 0}
                 </Text>
@@ -549,11 +550,14 @@ const handleMinus = (itemcode, qty,uom) => {
                   });
                   closeModal();
                 }}>
+                
+                {/*
                 <IonIcons
                   name="close-circle-sharp"
                   color={colors.primaryColor}
                   size={24}
                 />
+                */}
               </TouchableOpacity>
 
               <Text style={styles.modalMessage}>
