@@ -14,25 +14,16 @@ import React, {useState, useRef, useEffect} from 'react';
 import {colors} from '../Configuration';
 //import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import {useNavigationState, useFocusEffect} from '@react-navigation/native';
-//import {GetProductList} from '../../Network/API';
 import {GetProductList} from '../../Network/API';
 import {useContext} from 'react';
-//import { MyContext } from '../../Context/MyContext';
+import { MyContext } from '../../Context/MyContext';
+import HeaderComponent from '../../Components/HeaderComponent';
 //import FastImage from 'react-native-fast-image';
 
 const AllCategories = ({route, navigation}) => {
-  const UserDetails = {id: 1, username: 'guru', mobileno: '9732434343'};
-  // const {UserDetails} = useContext(MyContext);
-  // console.log("UserDetails"+JSON.stringify(UserDetails))
-  // const {
-  //   requestUserPermission,
-  //   getFCMToken,
-  //   listenToBackgroundNotifications,
-  //   listenToForegroundNotifications,
-  //   onNotificationOpenedAppFromBackground,
-  //   onNotificationOpenedAppFromQuit,
-  // } = usePushNotification();
+  const {UserDetails} = useContext(MyContext);
   const {width, height} = useWindowDimensions();
+  console.log(width)
   // const {ItemList} = route.params;
   const CategoryItemList = [
     {
@@ -132,40 +123,6 @@ const AllCategories = ({route, navigation}) => {
   ];
 
   const [ItemList, setItemList] = useState([]);
-  const backHandlerRef = useRef(null);
-  const [imageError, setImageError] = useState(false);
-
-  const currentRouteName = useNavigationState(state => {
-    const route = state.routes[state.index];
-    return route.name;
-  });
-
-  useFocusEffect(() => {
-    const backAction = () => {
-      console.log('back handler added');
-
-      console.log('current route name' + currentRouteName);
-      // Check if the current screen is the login screen
-      if (currentRouteName === 'Home') {
-        BackHandler.exitApp();
-        return true;
-      }
-
-      // Let the default back action handle the back press
-      return false;
-    };
-
-    backHandlerRef.current = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
-
-    return () => {
-      if (backHandlerRef.current) {
-        backHandlerRef.current.remove();
-      }
-    };
-  });
 
   const GetProductListDetails = () => {
     GetProductList()
@@ -186,23 +143,7 @@ const AllCategories = ({route, navigation}) => {
       });
   };
 
-  useEffect(() => {
-    console.log('UserDetails' + JSON.stringify(UserDetails));
-    // const listenToNotifications = () => {
-    //   try {
-    //     getFCMToken(UserDetails.user_id, UserDetails.mobileno);
-    //     requestUserPermission();
-    //     onNotificationOpenedAppFromQuit();
-    //     listenToBackgroundNotifications();
-    //     listenToForegroundNotifications();
-    //     onNotificationOpenedAppFromBackground();
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // };
-    // if (Platform.OS === 'android') {
-    //   listenToNotifications();
-    // }
+  useEffect(() => {    
     GetProductListDetails();
   }, [navigation]);
 
@@ -257,39 +198,26 @@ const AllCategories = ({route, navigation}) => {
           backgroundColor: 'white',
           borderRadius: 15,
           //width: 90,
-          width: width / 3 - 30,
-          height: 100,
+          width: 150,
+          height: 200,
           alignItems: 'center',
           justifyContent: 'center',
         }}>
         <View style={{alignItems: 'center'}}>
-          {/*
-          <Image
-            source={{uri: item.imageurl}}
-            style={{
-              height: 50,
-              width: 50,
-              resizeMode: 'contain',
-              borderRadius: 50,
-              marginTop: 5,
-              marginBottom: 5,
-            }}
-          />
-          */}
+       
           <Image
             style={{
-              width: 50,
-              height: 50,
-              borderRadius: 50,
+              width: 120,
+              height: 120,
+              //borderRadius: 50,
               marginTop: 5,
               marginBottom: 5,
             }}
             source={{
-              uri: item.imageurl,
-              //headers: {Authorization: 'someAuthToken'},
-              //priority: FastImage.priority.high,
+              uri: item.imageurl,       
             }}
-            //resizeMode={FastImage.resizeMode.contain}
+            //resizeMode='contain'
+            resizeMode='stretch'
           />
         </View>
         <View style={{alignItems: 'center', marginTop: 5, marginBottom: 5}}>
@@ -312,48 +240,20 @@ const AllCategories = ({route, navigation}) => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.primaryColor}}>
-      <View style={{flex: 1, backgroundColor: 'white'}}>
-        {/*
-        <TouchableOpacity
-        // onPress={() => navigation.navigate('AllCategories',{ItemList})}
-        style={{
-          marginTop: 20,
-          marginLeft: 10,
-          marginRight: 10,
-          backgroundColor: colors.primaryColor, //'white',
-          padding: 10,
-          borderRadius: 125,
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        <Text
-          style={{marginLeft: 5, fontFamily: LightFontfamily, color: 'white'}}>
-          Search Items
-        </Text>
-        <View style={{position: 'absolute', right: 20}}>
-          <FontAwesome name="search" size={18} />
-        </View>
-      </TouchableOpacity>
-      */}
+      <View style={{flex: 1, backgroundColor: 'white'}}>        
 
+        {/*
         <View
           style={{
             backgroundColor: colors.primaryColor,
             paddingTop: 10,
             paddingBottom: 10,
             height: 250,
-            flexDirection: 'row',
-            //borderBottomLeftRadius: 25,
-            //borderBottomRightRadius: 25,
-            marginBottom: 0,
-            //justifyContent:'center'
-            //alignItems: 'center',
-            //justifyContent: 'center',
+            flexDirection: 'row',            
+            marginBottom: 0,            
             paddingTop: 15,
           }}>
-          <Image
-            //source={require('../../Assets/ACIlogo.png')}
-            //source={require('../Assets/app_icons/ACIlogo.png')}
+          <Image            
             source={require('../Assets/ACIlogo.png')}
             style={{height: 60, width: 60, marginLeft: 5}}
           />
@@ -379,20 +279,7 @@ const AllCategories = ({route, navigation}) => {
               }}>
               Eat Dry Fruits! Stay Healthy!
             </Text>
-          </View>
-
-          {/*
-          <TouchableOpacity
-            style={{position: 'absolute', right: 15, top: 25}}
-            onPress={() => navigation.navigate('Search', {ItemList: ItemList})}>
-              
-            <MaterialCommunityIcons
-              name="store-search"
-              size={32}
-              color="white"
-            />            
-          </TouchableOpacity>
-          */}
+          </View>          
 
           <View style={{position: 'absolute', right: 15, top: 25}}>
             <View style={{flexDirection: 'row'}}>
@@ -412,24 +299,24 @@ const AllCategories = ({route, navigation}) => {
             </View>
           </View>
         </View>
+        */}
+        <HeaderComponent navigation={navigation} activeScreen={"Home"}/>
 
         <View
           style={{
             borderTopLeftRadius: 25,
             borderTopRightRadius: 25,
-            //height: '90%',
-            //height: height - 300,
-
             backgroundColor: 'white',
-            position: 'absolute',
+            //position: 'absolute',
             width: '100%',
-            top: 90,
+            //top: 100,
+            alignItems:'center'
           }}>
           <FlatList
             data={CategoryItemList}
             renderItem={renderItem}
             keyExtractor={item => item.id}
-            numColumns={3}
+            numColumns={5}
             contentContainerStyle={styles.listContainer}
           />
         </View>
@@ -446,11 +333,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   itemContainer: {
-    flex: 1,
-    // margin: 5,
-    // padding: 20,
-    // backgroundColor: colors.primaryColor,
-    // borderRadius: 5,
+    marginLeft:32,
     alignItems: 'center',
   },
   heading: {

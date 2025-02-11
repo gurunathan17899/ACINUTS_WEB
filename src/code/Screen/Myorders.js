@@ -6,7 +6,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  Platform  
+  Platform,
 } from 'react-native';
 //import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 //import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -16,22 +16,19 @@ import {CancelOrder, getUserOrders} from '../../Network/API';
 import {convertToCustomDateFormat} from '../../Helper/utils';
 //import LoaderKit from 'react-native-loader-kit';
 //import {showMessage} from 'react-native-flash-message';
-import {
-  colors,
-  secondaryFontfamily,
-  primaryFontfamily,
-} from "../Configuration";
-import { MyContext } from '../../Context/MyContext';
+import {colors, secondaryFontfamily, primaryFontfamily} from '../Configuration';
+import {MyContext} from '../../Context/MyContext';
+import HeaderComponent from '../../Components/HeaderComponent';
 
 const MyOrders = ({navigation}) => {
- const {UserDetails,Token} = useContext(MyContext);
+  const {UserDetails, Token} = useContext(MyContext);
 
   const [showLoader, setShowLoader] = useState(true);
   const [Data, setData] = useState([]);
-  
+
   useFocusEffect(
     React.useCallback(() => {
-      setShowLoader(true)
+      setShowLoader(true);
       navigation.setOptions({
         headerStyle: {
           borderBottomWidth: 0,
@@ -47,7 +44,7 @@ const MyOrders = ({navigation}) => {
           backgroundColor: colors.primaryColor,
         },
         headerTransparent: false,
-        headerTintColor: 'white',        
+        headerTintColor: 'white',
         headerTitleAlign: 'center',
         headerTitle: () => (
           <Text
@@ -59,11 +56,10 @@ const MyOrders = ({navigation}) => {
             }}>
             My Orders
           </Text>
-        ),       
+        ),
       });
     }, [navigation]),
   );
-
 
   useFocusEffect(
     useCallback(() => {
@@ -73,7 +69,7 @@ const MyOrders = ({navigation}) => {
           const res = await getUserOrders(Token);
           if (isActive) {
             if (res.data !== undefined) {
-              console.log("order list:"+JSON.stringify(res.data.data))
+              console.log('order list:' + JSON.stringify(res.data.data));
               setData(res.data.data);
               setShowLoader(false);
             } else {
@@ -94,17 +90,15 @@ const MyOrders = ({navigation}) => {
     }, [UserDetails.user_id]),
   );
 
-
-
-
   return (
     <View style={styles.container}>
-     {/* 
+      {/* 
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Your Orders</Text>       
       </View>
   */}
-  
+      <HeaderComponent navigation={navigation} activeScreen={'MyOrders'} />
+
       {showLoader ? (
         <View style={styles.loaderContainer}>
           {/*
@@ -114,11 +108,9 @@ const MyOrders = ({navigation}) => {
             color={colors.primaryColor}
           />
           */}
-
         </View>
       ) : Data.length === 0 ? (
         <View style={styles.noOrdersContainer}>
-          
           {/*
           <Ionicons name="bag-handle-outline" size={50} color={colors.primaryColor} />
           */}
@@ -139,12 +131,14 @@ const MyOrders = ({navigation}) => {
                 });
               }}>
               <View style={styles.orderDetails}>
-                <Text style={styles.address} numberOfLines={3}>{item.address}</Text>
+                <Text style={styles.address} numberOfLines={3}>
+                  {item.address}
+                </Text>
                 {/*
                 <Text style={styles.dateTime}>{`${convertToCustomDateFormat(
                   item.Order_Date,
                 )} `}</Text>      
-              */}          
+              */}
                 <View style={styles.imagesContainer}>
                   {item.items.length > 5 && (
                     <View
@@ -158,7 +152,11 @@ const MyOrders = ({navigation}) => {
                         marginLeft: 8,
                       }}>
                       <Text
-                        style={{fontFamily: secondaryFontfamily, fontSize: 10,color:colors.primaryColor}}>
+                        style={{
+                          fontFamily: secondaryFontfamily,
+                          fontSize: 10,
+                          color: colors.primaryColor,
+                        }}>
                         View More+
                       </Text>
                     </View>
@@ -171,7 +169,6 @@ const MyOrders = ({navigation}) => {
                             style={styles.productImage}
                             source={{
                               uri: item.imageurl,
-                              
                             }}
                             //resizeMode={FastImage.resizeMode.contain}
                           />
@@ -207,7 +204,6 @@ const MyOrders = ({navigation}) => {
                 />
                 */}
               </View>
-            
             </TouchableOpacity>
           )}
           keyExtractor={item => item.Order_ID.toString()}
@@ -215,7 +211,7 @@ const MyOrders = ({navigation}) => {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
         />
-      )}    
+      )}
     </View>
   );
 };
@@ -223,9 +219,7 @@ const MyOrders = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-   // backgroundColor: 'white',
-    paddingLeft:10,
-    paddingRight:10,paddingTop:20
+    // backgroundColor: 'white',
   },
   header: {
     flexDirection: 'row',
@@ -239,8 +233,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    marginBottom:10,
-    fontWeight:'600',
+    marginBottom: 10,
+    fontWeight: '600',
     fontFamily: primaryFontfamily,
     color: colors.primaryColor,
   },
@@ -263,7 +257,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 10,
     color: colors.primaryColor,
-    fontFamily:secondaryFontfamily
+    fontFamily: secondaryFontfamily,
   },
   listContainer: {
     paddingBottom: 8,
@@ -409,8 +403,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.3,
     alignItems: 'center',
     elevation: 1,
-    width:'50%',
-    
+    width: '50%',
   },
   actionText: {
     fontFamily: primaryFontfamily,
