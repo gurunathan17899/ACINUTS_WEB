@@ -16,6 +16,7 @@ import HeaderComponent from '../../Components/HeaderComponent';
 import About from './ProfileContainer/Policies/About';
 import PrivacyPolicy from './ProfileContainer/Policies/PrivacyPolicy';
 import TermsAndConditions from './ProfileContainer/Policies/TermsAndConditions';
+import AddressInfo from './ShippingAddress/AddressInfo';
 
 const Profile = ({navigation}) => {
   const {UserDetails, setUserDetails} = useContext(MyContext);
@@ -199,7 +200,12 @@ const Profile = ({navigation}) => {
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => setActiveTab('LogIn')}>
+              <TouchableOpacity
+                onPress={() => {
+                  //setActiveTab('LogIn');
+                  navigation.navigate('SignIn');
+
+                }}>
                 <Text
                   style={
                     activeTab == 'LogIn' ? styles.activeTopic : styles.topic
@@ -220,6 +226,7 @@ const Profile = ({navigation}) => {
               </TouchableOpacity>
             </View>
           </View>
+
           <View
             style={{
               width: '50%',
@@ -233,6 +240,7 @@ const Profile = ({navigation}) => {
             {activeTab === 'ContactUs' && <About />}
             {activeTab === 'PrivacyPolicy' && <PrivacyPolicy />}
             {activeTab === 'TermsConditions' && <TermsAndConditions />}
+            {activeTab == 'ShippingAddress' && <AddressInfo />}
           </View>
         </View>
       </View>

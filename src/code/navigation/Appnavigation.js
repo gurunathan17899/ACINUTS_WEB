@@ -3,7 +3,7 @@ import {View, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Launch from '../Screen/Launch';
-import SignIn from '../Screen/SignIn';
+import SignIn from '../Screen/Authentication/SignIn';
 import Signup from '../Screen/Signup';
 import AllCategories from '../Screen/AllCategories';
 import Dashboard from '../Screen/Dashboard';
@@ -24,6 +24,12 @@ const Appnavigation = () => {
         <Stack.Screen
           name="Launch"
           component={Launch}
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="SignIn"
+          component={SignIn}
           options={{headerShown: false}}
         />
 

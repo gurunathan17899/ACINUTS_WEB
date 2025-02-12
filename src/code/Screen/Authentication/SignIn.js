@@ -8,7 +8,7 @@ import {
   TextInput,
 } from 'react-native';
 import React, {useState} from 'react';
-import {secondaryFontfamily, LightFontfamily} from '../Configuration';
+import {secondaryFontfamily, LightFontfamily} from '../../Configuration';
 //import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const SignIn = ({navigation}) => {
@@ -46,7 +46,8 @@ const SignIn = ({navigation}) => {
               alignItems: 'center',
             }}>
             <Image
-              source={require('../Assets/ACIlogo.png')}
+              //source={require('../../Assets/ACIlogo.png')}
+              source={require('../../../code/Assets/ACIlogo.png')}
               style={{
                 height: 140,
                 width: 140,
@@ -61,7 +62,7 @@ const SignIn = ({navigation}) => {
               alignItems: 'center',
             }}>
             <Image
-              source={require('../Assets/ACIlogo.png')}
+              source={require('../../Assets/ACIlogo.png')}
               style={{
                 height: 120,
                 width: 120,
@@ -81,22 +82,6 @@ const SignIn = ({navigation}) => {
             bottom: isKeyboardOpen ? 40 : 100,
             // /marginLeft: -210
           }}>
-          <Text
-            style={{
-              fontSize: 14,
-              color: '#ffffff',
-              fontFamily: LightFontfamily,
-            }}>
-            Don't have an account?
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              color: '#ffffff',
-              fontFamily: LightFontfamily,
-            }}>
-            Don't have an account?
-          </Text>
           <Text
             style={{
               fontSize: 14,

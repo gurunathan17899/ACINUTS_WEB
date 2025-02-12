@@ -15,12 +15,12 @@ import {
   primaryFontfamily,
   secondaryFontfamily,
 } from '../../Configuration';
-import Entypo from 'react-native-vector-icons/Entypo';
-import {GetUserShippingAddress, deleteShippingAddress} from '../../Network/API';
+//import Entypo from 'react-native-vector-icons/Entypo';
+import {GetUserShippingAddress, deleteShippingAddress} from "../../../Network/API";
 import {useContext} from 'react';
-import {MyContext} from '../../Context/MyContext';
-import {showMessage} from 'react-native-flash-message';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { MyContext } from '../../../Context/MyContext';
+//import {showMessage} from 'react-native-flash-message';
+//import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const AddressInfo = ({navigation}) => {
   const {UserShippingAddress, UserDetails, setUserShippingAddress, Token} =
@@ -88,50 +88,7 @@ const AddressInfo = ({navigation}) => {
       });
   }, [UserShippingAddress]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      navigation.setOptions({
-        headerStyle: {
-          borderBottomWidth: 0,
-          alignItems: 'center',
-          shadowColor:
-            Platform.OS === 'lightgrey' ? 'lightgrey' : 'transparent',
-          shadowOffset: {
-            width: 0,
-            height: 1,
-          },
-          shadowRadius: 3,
-          shadowOpacity: 1.0,
-          elevation: 3,
-          backgroundColor: colors.primaryColor,
-        },
-        headerTransparent: false,
-        headerTintColor: 'white',
-        headerTitleAlign: 'center',
-        headerLeft: () =>
-          Platform.OS == 'ios' && (
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{marginRight: 10}}>
-                <FontAwesome name="angle-left" size={33} color="white" />
-              </TouchableOpacity>
-            </View>
-          ),
-        headerTitle: () => (
-          <Text
-            style={{
-              fontWeight: '600',
-              color: 'white',
-              fontSize: 20,
-              fontFamily: primaryFontfamily,
-            }}>
-            Shipping Addresses
-          </Text>
-        ),
-      });
-    }, [navigation]),
-  );
+  
 
   const toggleMenu = id => {
     if (visibleMenuId === id) {
@@ -151,7 +108,9 @@ const AddressInfo = ({navigation}) => {
         <TouchableOpacity
           onPress={() => navigation.navigate('ShippingAddress', {item: {}})}
           style={{position: 'absolute', right: 20, flexDirection: 'row'}}>
+            {/*
           <Entypo name="squared-plus" size={20} color={colors.primaryColor} />
+          */}
           <Text
             style={{
               fontFamily: secondaryFontfamily,
