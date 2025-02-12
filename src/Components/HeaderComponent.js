@@ -79,15 +79,36 @@ const HeaderComponent = ({navigation, activeScreen}) => {
             <TouchableOpacity
               onPress={() => navigation.navigate('Cart')}
               style={{marginRight: 12}}>
-              <Text style={ activeScreen == 'Cart' ? styles.ActiveHeading : styles.heading}>Cart</Text>
+              <Text
+                style={
+                  activeScreen == 'Cart' ? styles.ActiveHeading : styles.heading
+                }>
+                Cart
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => navigation.navigate('MyOrders')}
               style={{marginRight: 12}}>
-              <Text style={ activeScreen == 'MyOrders' ? styles.ActiveHeading :  styles.heading}>Orders</Text>
+              <Text
+                style={
+                  activeScreen == 'MyOrders'
+                    ? styles.ActiveHeading
+                    : styles.heading
+                }>
+                Orders
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{marginRight: 12}}>
-              <Text style={styles.heading}>Profile</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Profile')}
+              style={{marginRight: 12}}>
+              <Text
+                style={
+                  activeScreen == 'Profile'
+                    ? styles.ActiveHeading
+                    : styles.heading
+                }>
+                Profile
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

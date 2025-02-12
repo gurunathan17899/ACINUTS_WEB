@@ -27,41 +27,6 @@ const MyOrders = ({navigation}) => {
   const [Data, setData] = useState([]);
 
   useFocusEffect(
-    React.useCallback(() => {
-      setShowLoader(true);
-      navigation.setOptions({
-        headerStyle: {
-          borderBottomWidth: 0,
-          alignItems: 'center',
-          shadowColor: Platform.OS === 'lightgrey',
-          shadowOffset: {
-            width: 0,
-            height: 1,
-          },
-          shadowRadius: 3,
-          shadowOpacity: 1.0,
-          elevation: 3,
-          backgroundColor: colors.primaryColor,
-        },
-        headerTransparent: false,
-        headerTintColor: 'white',
-        headerTitleAlign: 'center',
-        headerTitle: () => (
-          <Text
-            style={{
-              fontWeight: '600',
-              color: 'white',
-              fontSize: 20,
-              fontFamily: primaryFontfamily,
-            }}>
-            My Orders
-          </Text>
-        ),
-      });
-    }, [navigation]),
-  );
-
-  useFocusEffect(
     useCallback(() => {
       let isActive = true;
       const fetchData = async () => {
@@ -92,11 +57,6 @@ const MyOrders = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      {/* 
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Your Orders</Text>       
-      </View>
-  */}
       <HeaderComponent navigation={navigation} activeScreen={'MyOrders'} />
 
       {showLoader ? (
@@ -118,27 +78,40 @@ const MyOrders = ({navigation}) => {
           <Text style={styles.noOrdersText}>No Orders Found</Text>
         </View>
       ) : (
-        <FlatList
-          data={Data}
-          renderItem={({item}) => (
-            <TouchableOpacity
-              style={styles.orderContainer}
-              onPress={() => {
-                console.log('item.items' + JSON.stringify(item));
-                navigation.navigate('OrderedItemList', {
-                  items: item.items,
-                  order: item,
-                });
-              }}>
-              <View style={styles.orderDetails}>
-                <Text style={styles.address} numberOfLines={3}>
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              paddingVertical:16
+            }}>
+            <Text style={styles.input}>Order ID</Text>
+            <Text style={styles.input}>Order Date</Text>
+            <Text style={styles.input}>Status</Text>
+            <Text style={styles.input}>Products</Text>
+            <Text style={styles.input}>Bill Amount</Text>
+          </View>
+          <FlatList
+            data={Data}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                style={styles.orderContainer}
+                onPress={() => {
+                  //console.log('item.items' + JSON.stringify(item));
+                  navigation.navigate('OrderedItemList', {
+                    items: item.items,
+                    order: item,
+                  });
+                }}>
+                <View style={styles.orderDetails}>
+                  {/*
+                 <Text style={styles.address} numberOfLines={3}>
                   {item.address}
                 </Text>
-                {/*
-                <Text style={styles.dateTime}>{`${convertToCustomDateFormat(
-                  item.Order_Date,
-                )} `}</Text>      
+                  
               */}
+
+                  {/*
                 <View style={styles.imagesContainer}>
                   {item.items.length > 5 && (
                     <View
@@ -170,47 +143,36 @@ const MyOrders = ({navigation}) => {
                             source={{
                               uri: item.imageurl,
                             }}
-                            //resizeMode={FastImage.resizeMode.contain}
                           />
                         </View>
                       ),
                   )}
                 </View>
-
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-evenly',
-                  }}>
-                  <Text style={styles.input}>Status</Text>
-                  <Text style={styles.input}>Products</Text>
-                  <Text style={styles.input1}>Order Price</Text>
-                </View>
-                <View style={styles.orderMeta}>
-                  <Text style={styles.orderPrice}>{item.Delivery_Status}</Text>
-                  <Text style={styles.productsCount}>
-                    {' '}
-                    {item.items.length} Products
-                  </Text>
-                  <Text style={styles.orderPrice}>₹ {item.Total_Amount}</Text>
-                </View>
-              </View>
-              <View style={{position: 'absolute', right: 20, marginTop: 19}}>
-                {/*
-                <MaterialIcons
-                  name="arrow-forward-ios"
-                  size={18}
-                  color={colors.primaryColor}
-                />
                 */}
-              </View>
-            </TouchableOpacity>
-          )}
-          keyExtractor={item => item.Order_ID.toString()}
-          contentContainerStyle={styles.listContainer}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-        />
+
+                  <View style={styles.orderMeta}>
+                    <Text style={styles.orderPrice}>{item.Order_ID}</Text>
+                    <Text style={styles.dateTime}>{`${convertToCustomDateFormat(
+                      item.Order_Date,
+                    )} `}</Text>
+                    <Text style={styles.orderPrice}>
+                      {item.Delivery_Status}
+                    </Text>
+                    <Text style={styles.dateTime}>
+                      {' '}
+                      {item.items.length} Items
+                    </Text>
+                    <Text style={styles.orderPrice}>₹ {item.Total_Amount}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            )}
+            keyExtractor={item => item.Order_ID.toString()}
+            contentContainerStyle={styles.listContainer}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
       )}
     </View>
   );
@@ -266,8 +228,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 16,
-    marginBottom: 16,
-    elevation: 10,
+    marginBottom: 8,
+    marginTop: 8,
+    marginLeft: 16,
+    marginRight: 16,
+
     marginHorizontal: 5,
   },
   orderDetails: {
@@ -284,8 +249,9 @@ const styles = StyleSheet.create({
   dateTime: {
     fontSize: 12,
     fontFamily: secondaryFontfamily,
-    color: 'grey',
-    marginBottom: 8,
+    color: 'gray',
+    fontWeight:'600'
+    //marginBottom: 8,
   },
   imagesContainer: {
     flexDirection: 'row-reverse',
@@ -300,10 +266,11 @@ const styles = StyleSheet.create({
     //backgroundColor: 'red',
   },
   input: {
-    fontSize: 12,
+    fontSize: 14,
+    fontWeight:'600',
     color: 'black',
     fontFamily: secondaryFontfamily,
-    marginRight: 25,
+    
   },
   input1: {
     fontSize: 12,
@@ -325,6 +292,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: secondaryFontfamily,
     color: colors.primaryColor,
+    fontWeight: '600',
   },
   modalOverlay: {
     flex: 1,

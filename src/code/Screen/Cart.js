@@ -17,12 +17,8 @@ import {DeleteCartItem, GetUserCartList} from '../../Network/API';
 //import LoaderKit from 'react-native-loader-kit'
 import {useFocusEffect} from '@react-navigation/native';
 import {MyContext} from '../../Context/MyContext';
-//import { showMessage } from 'react-native-flash-message';
-//import AntDesign from "react-native-vector-icons/AntDesign"
-//import IonIcons from "react-native-vector-icons/Ionicons"
 import {useContext} from 'react';
 import HeaderComponent from '../../Components/HeaderComponent';
-//import FastImage from 'react-native-fast-image';
 
 const Cart = ({navigation}) => {
   const {Token} = useContext(MyContext);
@@ -329,13 +325,29 @@ const Cart = ({navigation}) => {
                         padding: 4,
                         borderRadius: 8,
                       }}>
-                      <TouchableOpacity style={{width: 25}}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          handlePress(
+                            item.itemcode,
+                            item.qty,
+                            item.selectedCategory,
+                          )
+                        }
+                        style={{width: 25}}>
                         <Text>+</Text>
                       </TouchableOpacity>
                       <View style={{width: 30}}>
                         <Text>{item.qty}</Text>
                       </View>
-                      <TouchableOpacity style={{width: 10}}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          handleMinus(
+                            item.itemcode,
+                            item.qty,
+                            item.selectedCategory,
+                          )
+                        }
+                        style={{width: 10}}>
                         <Text>-</Text>
                       </TouchableOpacity>
                     </View>

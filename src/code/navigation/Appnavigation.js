@@ -13,6 +13,7 @@ import ItemDetails from '../Screen/ItemDetails';
 import Cart from '../Screen/Cart';
 import MyOrders from '../Screen/Myorders';
 import PlaceOrder from '../Screen/PlaceOrder';
+import Profile from '../Screen/Profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -65,6 +66,12 @@ const Appnavigation = () => {
         <Stack.Screen
           name="Search"
           component={Search}
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
