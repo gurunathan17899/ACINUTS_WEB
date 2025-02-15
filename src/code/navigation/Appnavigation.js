@@ -14,6 +14,7 @@ import Cart from '../Screen/Cart';
 import MyOrders from '../Screen/Myorders';
 import PlaceOrder from '../Screen/PlaceOrder';
 import Profile from '../Screen/Profile';
+import SignUp from '../Screen/Authentication/SignUp';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,12 @@ const Appnavigation = () => {
         <Stack.Screen
           name="SignIn"
           component={SignIn}
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="SignUp"
+          component={SignUp}
           options={{headerShown: false}}
         />
 

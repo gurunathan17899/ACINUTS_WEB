@@ -210,7 +210,7 @@ const Profile = ({navigation}) => {
                   style={
                     activeTab == 'LogIn' ? styles.activeTopic : styles.topic
                   }>
-                  Log In
+                  SignIn
                 </Text>
               </TouchableOpacity>
 

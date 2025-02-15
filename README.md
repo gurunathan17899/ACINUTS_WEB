@@ -11,10 +11,10 @@ shipping address list
 login session
 payment
 loaders
-category item list align
-custom fontfamily support
 icon issue
 
 cart - api call --done
 order api call --done
 getproductlist api call -- done
+custom fontfamily support --done
+category item list align --done

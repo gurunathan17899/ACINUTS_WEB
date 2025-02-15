@@ -1,11 +1,8 @@
 import { Image, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react'
 import { colors, primaryFontfamily, secondaryFontfamily } from '../../Configuration'
 
-
-const SignIn = ({navigation}) => {
-
-  const [getOtp, setGetOtp] = useState(false);
+const SignUp = ({navigation}) => {
  
   return (
     <View style={{flex: 1, flexDirection: 'row'}}>
@@ -62,8 +59,23 @@ const SignIn = ({navigation}) => {
               color: colors.primaryColor,
               marginBottom: 16,
             }}>
-            Please login here to continue!!
+            Welcome to ACINUTS!!
           </Text>
+          <TextInput
+            maxLength={10}
+            placeholder="Enter your name"
+            placeholderTextColor={'lightgray'}
+            style={{
+              backgroundColor: '#ecf0f1',
+              width: 300,
+              marginTop: 16,
+              padding: 8,
+              borderRadius: 8,
+              fontFamily: secondaryFontfamily,
+              fontWeight: '600',
+              height: 50,
+            }}
+          />
           <TextInput
             maxLength={10}
             placeholder="Enter your mobile number"
@@ -79,24 +91,25 @@ const SignIn = ({navigation}) => {
               height: 50,
             }}
           />
-          
-            <TextInput
-              maxLength={6}
-              placeholder="Enter your OTP"
-              secureTextEntry={true}            
-              placeholderTextColor={'lightgray'}
-              style={{
-                backgroundColor: '#ecf0f1',
-                width: 300,
-                marginTop: 16,
-                padding: 8,
-                borderRadius: 8,
-                fontFamily: secondaryFontfamily,
-                fontWeight: '600',
-                height: 50,                
-              }}
-            />
-          
+
+          <TextInput
+            maxLength={6}
+            placeholder="Enter your OTP"
+            secureTextEntry={true}
+            placeholderTextColor={'lightgray'}
+            style={{
+              backgroundColor: '#ecf0f1',
+              width: 300,
+              marginTop: 16,
+              padding: 8,
+              borderRadius: 8,
+              fontFamily: secondaryFontfamily,
+              fontWeight: '600',
+              height: 50,
+              //borderColor: colors.primaryColor,
+              //borderWidth: 2,
+            }}
+          />
 
           <TouchableOpacity
             style={{
@@ -129,9 +142,9 @@ const SignIn = ({navigation}) => {
                 fontFamily: secondaryFontfamily,
                 fontWeight: '400',
               }}>
-              Don't have account?
+              Already have an account?
             </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+            <TouchableOpacity onPress={()=>navigation.navigate("SignIn")}>
               <Text
                 style={{
                   color: colors.primaryColor,
@@ -140,7 +153,7 @@ const SignIn = ({navigation}) => {
                   fontWeight: '600',
                 }}>
                 {' '}
-                SignUp
+                SignIn
               </Text>
             </TouchableOpacity>
           </View>
@@ -150,6 +163,6 @@ const SignIn = ({navigation}) => {
   );
 }
 
-export default SignIn
+export default SignUp;
 
 const styles = StyleSheet.create({})
