@@ -96,7 +96,7 @@ const CategoryItemList = ({navigation, route}) => {
   const renderItem = ({item}) => (
     <View style={styles.itemContainer}>
       <TouchableOpacity
-        onPress={() => navigation.navigate('ItemDetails', {Item: item})}
+        //onPress={() => navigation.navigate('ItemDetails', {Item: item})}
         style={{
           //   marginRight: 10,
           marginBottom: 10,

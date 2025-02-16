@@ -3,17 +3,17 @@ import React, {useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
-//import { MyContext } from '../Context/MyContext';
-//import { useContext } from 'react';
-//import { GenerateBearerToken } from '../Network/API';
+import { MyContext } from '../../Context/MyContext';
+import { useContext } from 'react';
+import { GenerateBearerToken } from '../../Network/API';
 
 const Launch = ({}) => {
   const navigation = useNavigation();
-  // const {setUserDetails,setToken} = useContext(MyContext);
+  const {setUserDetails,setToken} = useContext(MyContext);
 
   useEffect(() => {
     setTimeout(() => {
-      // retrieveData()
+      retrieveData()
       navigation.navigate('Dashboard');
     }, 1000);
   }, []);
@@ -35,6 +35,7 @@ const Launch = ({}) => {
         console.log('Data retrieval was successful');
         const data = JSON.parse(storedData);
         console.log('login data:' + JSON.stringify(data));
+        setUserDetails(data);
         GenerateBearerToken(data.mobileno)
           .then(res => {
             console.log('Generated token', JSON.stringify(res));
@@ -43,8 +44,7 @@ const Launch = ({}) => {
               navigation.navigate('Dashboard', {screen: 'Home'});
             } else {
               showMessage({
-                message: 'Something went wrong. Please try again later.',
-                //description: "Password must be at least 4 characters long.",
+                message: 'Something went wrong. Please try again later.',                
                 type: 'danger',
               });
             }
