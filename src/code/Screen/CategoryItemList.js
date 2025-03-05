@@ -8,90 +8,123 @@ import {
   Image,
   Platform,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {colors, primaryFontfamily, secondaryFontfamily} from '../Configuration';
 //import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HeaderComponent from '../../Components/HeaderComponent';
-
+import { IoMdRadioButtonOff } from "react-icons/io";
+import { IoRadioButtonOnOutline } from "react-icons/io5";
+import { AddItemToCartList } from '../../Network/API';
+import { MyContext } from '../../Context/MyContext';
+import showMessage from '../Toast';
 
 //import FontAwesome from 'react-native-vector-icons/FontAwesome'
 //import FastImage from 'react-native-fast-image';
 
-const CategoryItemList = ({navigation, route}) => {
-  const ItemList = route.params.ItemList[0].Item
-  console.log('route:' + JSON.stringify(route.params));
+const CategoryItemList = ({navigation, route}) => {  
+  const {UserDetails,Token} = useContext(MyContext)
+  const [ItemList, setItemList] = useState([]);
+  //console.log('route:' + JSON.stringify(ItemList));
 
-  const groupname = ItemList.length > 0 ? ItemList[0].groupname : 'Group Name';
-  // const flattenItemList = list => {
-  //   return list.reduce((acc, group) => {
-  //     const itemsWithGroupname = group.Item.map(item => ({
-  //       ...item,
-  //       groupname: group.groupname,
-  //     }));
-  //     return acc.concat(itemsWithGroupname);
-  //   }, []);
-  // };
+  useEffect(()=>{
+    const data = route.params?.ItemList[0]?.Item.map(item => ({
+      ...item,
+      QTY: 1,
+    }));
+    setItemList(data)
 
-  // const flattenedItems = flattenItemList(ItemList);
+  },[navigation])
 
-  function findMaxPrice(dataArray) {
-    // Use reduce to find the maximum price
-    const maxItem = dataArray.reduce(
-      (max, item) => {
-        return item.price > max.price ? item : max;
-      },
-      {price: 0},
+  const handleRateSelection = (itemCode, categoryCode,CategoryName) => {
+    setItemList(prevData =>
+      prevData.map(item => {
+        if (item.itemcode === itemCode) {
+          return {
+            ...item,
+            rate: item.rate.map(
+              rate =>
+                rate.CategoryCode === categoryCode
+                  ? {...rate, isSelected: true}
+                  : {...rate, isSelected: false}, // Deselect other rates
+            ),
+            ActiveCategoryName: CategoryName,
+            Price: item.rate.find(item => item.CategoryCode === categoryCode),
+          };
+        }
+        return item;
+      }),
     );
+   // console.log(JSON.stringify(ItemList))
+  };
 
-    return {maxPrice: maxItem.price, maxCategoryName: maxItem.CategoryName};
+  const handleQty = (itemCode, type) => {
+    setItemList(prevData =>
+      prevData.map(item => {
+        if (item.itemcode === itemCode) {
+          return {
+            ...item,
+            QTY:
+              type == 'add'
+                ? item?.QTY + 1
+                : type == 'minus' && item.QTY > 0
+                ? item.QTY - 1
+                : item.QTY,
+          };
+        }
+        return item;
+      }),
+    );    
+  };
+
+  const AddItemToCart = (item)=>{
+    console.log("item",JSON.stringify(item))
+    if(UserDetails?.username != 'guest'){
+    if(item?.ActiveCategoryName == undefined){
+      showMessage({
+        message: 'Please select category type',
+        type: 'danger',
+      });
+    }else{
+      AddItemToCartList(
+        Token,
+        item.itemcode,
+        item.ActiveCategoryName,
+        item.QTY ?? 1,
+        item.Price.price,
+      )
+        .then(res => {
+          console.log('Add item cart list response', JSON.stringify(res));
+          if (res?.data.issuccess == true) {
+            showMessage({
+              message: 'Item added in cart successfully.',
+              type: 'success',
+            });
+          } else if (res?.data.issuccess == false) {
+            showMessage({
+              message: res.data.message,
+              type: 'danger',
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error occurred:', error);
+          console.log('problem in fetch data for AddItemToCartList ');
+          showMessage({
+            message: 'Item Not Added. Please try again later.',
+            //description: "Password must be at least 4 characters long.",
+            type: 'danger',
+          });
+        });
+    }
+  }else{
+    showMessage({
+      message: 'Please sign-up to continue shopping.',
+      type: 'info',
+    });
+    navigation.navigate('Signup');
   }
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     navigation.setOptions({
-  //       headerStyle: {
-  //         borderBottomWidth: 0,
-  //         //alignItems: 'center',
-  //         shadowColor: Platform.OS === 'lightgrey',
-  //         shadowOffset: {
-  //           width: 0,
-  //           height: 1,
-  //         },
-  //         shadowRadius: 3,
-  //         shadowOpacity: 1.0,
-  //         elevation: 3,
-  //         backgroundColor: colors.primaryColor,
-  //       },
-  //       headerTransparent: false,
-  //       headerTintColor: 'white',
-
-  //       headerTitleAlign: 'center',
-  //       headerTitle: () => (
-  //         <Text
-  //           style={{
-  //             fontWeight: '600',
-  //             color: 'white',
-  //             fontSize: 20,
-  //             fontFamily: primaryFontfamily,
-  //           }}>
-  //           {route.params.Category}
-  //         </Text>
-  //       ),
-  //       headerLeft: () =>
-  //         Platform.OS == 'ios' && (
-  //           <View style={{flexDirection: 'row'}}>
-  //             <TouchableOpacity
-  //               onPress={() => navigation.goBack()}
-  //               style={{marginRight: 10}}>
-  //               {/*
-  //             <FontAwesome name="angle-left" size={33} color="white" />
-  //             */}
-  //             </TouchableOpacity>
-  //           </View>
-  //         ),
-  //     });
-  //   }, [navigation]),
-  // );
+  }
+  
 
   const renderItem = ({item}) => (
     <View style={styles.itemContainer}>
@@ -156,8 +189,30 @@ const CategoryItemList = ({navigation, route}) => {
           <View style={{alignItems: 'center', width: '100%'}}>
             <FlatList
               data={item.rate}
-              renderItem={({item}) => (
+              renderItem={({item: cat}) => (
                 <View style={{flexDirection: 'row', marginTop: 4}}>
+                  <TouchableOpacity
+                    style={{marginRight: 4}}
+                    onPress={() =>
+                      handleRateSelection(
+                        item.itemcode,
+                        cat.CategoryCode,
+                        cat.CategoryName,
+                      )
+                    }>
+                    {cat?.isSelected == true ? (
+                      <IoRadioButtonOnOutline
+                        size={16}
+                        color={colors.primaryColor}
+                      />
+                    ) : (
+                      <IoMdRadioButtonOff
+                        size={16}
+                        color={colors.primaryColor}
+                      />
+                    )}
+                  </TouchableOpacity>
+
                   <View style={{}}>
                     <Text
                       style={{
@@ -165,7 +220,7 @@ const CategoryItemList = ({navigation, route}) => {
                         color: 'gray',
                         fontFamily: secondaryFontfamily,
                       }}>
-                      {item.CategoryName}:
+                      {cat.CategoryName}:
                     </Text>
                   </View>
 
@@ -177,7 +232,7 @@ const CategoryItemList = ({navigation, route}) => {
                       fontFamily: primaryFontfamily,
                     }}>
                     {' '}
-                    ₹{item.price}
+                    ₹{cat.price}
                   </Text>
                 </View>
               )}
@@ -186,6 +241,7 @@ const CategoryItemList = ({navigation, route}) => {
 
           <View style={{flexDirection: 'row', marginTop: 12, marginBottom: 8}}>
             <TouchableOpacity
+              onPress={() => handleQty(item.itemcode, 'add')}
               style={{
                 borderColor: 'lightgray',
                 borderWidth: 0.01,
@@ -214,10 +270,11 @@ const CategoryItemList = ({navigation, route}) => {
                 marginRight: 4,
               }}>
               <Text style={{fontFamily: secondaryFontfamily, fontSize: 12}}>
-                1
+                {item.QTY == undefined ? 1 : item.QTY}
               </Text>
             </View>
             <TouchableOpacity
+              onPress={() => handleQty(item.itemcode, 'minus')}
               style={{
                 borderColor: 'lightgray',
                 borderWidth: 0.01,
@@ -238,6 +295,7 @@ const CategoryItemList = ({navigation, route}) => {
           </View>
 
           <TouchableOpacity
+            onPress={() => AddItemToCart(item)}
             style={{
               backgroundColor: colors.primaryColor,
               padding: 12,

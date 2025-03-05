@@ -1,9 +1,90 @@
 import { Image, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import { colors, primaryFontfamily, secondaryFontfamily } from '../../Configuration'
+import { MyContext } from '../../../Context/MyContext';
+import { SingUpAPI } from '../../../Network/API';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUp = ({navigation}) => {
+  const [mobile, setMobile] = useState('');
+  const [username, setUserName] = useState('');
+  const [OTP,setOTP]=useState("");  
+  const [userData, setUserData] = useState('');
+  const {setToken, setUserDetails} = useContext(MyContext);
+  const [otpSent, setOTPSent] = useState(false);
+
+  const handleSignup = () => {
+    if (mobile.length !== 10) {
+      showMessage({        
+        message: "Please enter a 10-digit mobile number.",
+        type: "danger",
+      });
+     // return;
+    }
+    else if (mobile < 6000000000){
+      showMessage({        
+        message: "Please enter valid mobile number.",
+        type: "danger",
+      });
+    }
+
+    else if (username == "") {
+      showMessage({
+        message: "Please enter your name.",        
+        type: "danger",
+      });
+      return;
+    } else{
+      SingUpAPI(mobile,username)
+      .then(res => {
+        console.log(
+          'SignUP API response',
+          JSON.stringify(res),
+        );
+        if (res.data.issuccess == true) {
+          //navigation.navigate('OtpVerify', {mobile: mobile,data:res.data,mobileno:mobile});
+          setUserData(res.data.data);
+        } else if(res.data.issuccess == false) {
+          showMessage({
+            message: res.data.message,//"Something went wrong. Please try again later.",            
+            type: "danger",
+          });
+        }
+      })
+      .catch(error => {
+            console.error('Error occurred:', error);
+        console.log(
+          'problem in fetch data for getProductItemDetails ',
+        );
+      });      
+    }
+  };
+
+  const storeData = async data => {
+    try {
+      const jsonValue = JSON.stringify(data);
+      console.log(jsonValue + 'user data');
+      await AsyncStorage.setItem('ACINUTS_USER_DETAILS', jsonValue);
+      setUserDetails(data); //directly storing the value in global context.
+      setToken(data.token);
+      console.log('Data successfully stored');
+      navigation.navigate('Dashboard', {screen: 'Home'});
+    } catch (e) {
+      console.error('Failed to store data', e);
+    }
+  };
  
+  const verifyOTP = ()=>{
+    console.log(OTP)
+    console.log(userData.otp)
+    if(OTP == ""){
+      showMessage({message:"Please enter otp",type:'error'})
+    }else if(OTP == userData.otp){
+      storeData(userData);
+      navigation.navigate('Dashboard');
+    }    
+  }
+
   return (
     <View style={{flex: 1, flexDirection: 'row'}}>
       <View style={{width: '50%'}}>
@@ -63,6 +144,7 @@ const SignUp = ({navigation}) => {
           </Text>
           <TextInput
             maxLength={10}
+            onChangeText={setUserName}
             placeholder="Enter your name"
             placeholderTextColor={'lightgray'}
             style={{
@@ -77,6 +159,7 @@ const SignUp = ({navigation}) => {
             }}
           />
           <TextInput
+            onChangeText={setMobile}
             maxLength={10}
             placeholder="Enter your mobile number"
             placeholderTextColor={'lightgray'}
@@ -92,46 +175,72 @@ const SignUp = ({navigation}) => {
             }}
           />
 
-          <TextInput
-            maxLength={6}
-            placeholder="Enter your OTP"
-            secureTextEntry={true}
-            placeholderTextColor={'lightgray'}
-            style={{
-              backgroundColor: '#ecf0f1',
-              width: 300,
-              marginTop: 16,
-              padding: 8,
-              borderRadius: 8,
-              fontFamily: secondaryFontfamily,
-              fontWeight: '600',
-              height: 50,
-              //borderColor: colors.primaryColor,
-              //borderWidth: 2,
-            }}
-          />
-
-          <TouchableOpacity
-            style={{
-              backgroundColor: colors.primaryColor,
-              marginTop: 24,
-              padding: 16,
-              paddingLeft: 24,
-              paddingRight: 24,
-              borderRadius: 4,
-              width: 300,
-              alignItems: 'center',
-            }}>
-            <Text
+          {otpSent && (
+            <TextInput
+              onChangeText={setOTP}
+              maxLength={6}
+              placeholder="Enter your OTP"
+              secureTextEntry={true}
+              placeholderTextColor={'lightgray'}
               style={{
+                backgroundColor: '#ecf0f1',
+                width: 300,
+                marginTop: 16,
+                padding: 8,
+                borderRadius: 8,
                 fontFamily: secondaryFontfamily,
-                color: 'white',
-                fontSize: 14,
                 fontWeight: '600',
+                height: 50,
+              }}
+            />
+          )}
+          {!otpSent ? (
+            <TouchableOpacity
+              onPress={() => handleSignin()}
+              style={{
+                backgroundColor: colors.primaryColor,
+                marginTop: 24,
+                padding: 16,
+                paddingLeft: 24,
+                paddingRight: 24,
+                borderRadius: 4,
+                width: 300,
+                alignItems: 'center',
               }}>
-              Get OTP
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={{
+                  fontFamily: secondaryFontfamily,
+                  color: 'white',
+                  fontSize: 14,
+                  fontWeight: '600',
+                }}>
+                Get OTP
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => verifyOTP()}
+              style={{
+                backgroundColor: colors.primaryColor,
+                marginTop: 24,
+                padding: 16,
+                paddingLeft: 24,
+                paddingRight: 24,
+                borderRadius: 4,
+                width: 300,
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  fontFamily: secondaryFontfamily,
+                  color: 'white',
+                  fontSize: 14,
+                  fontWeight: '600',
+                }}>
+                Verify OTP
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
         <View style={{alignItems: 'center', marginTop: 24}}>
           <View style={{flexDirection: 'row'}}>
@@ -144,7 +253,7 @@ const SignUp = ({navigation}) => {
               }}>
               Already have an account?
             </Text>
-            <TouchableOpacity onPress={()=>navigation.navigate("SignIn")}>
+            <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
               <Text
                 style={{
                   color: colors.primaryColor,

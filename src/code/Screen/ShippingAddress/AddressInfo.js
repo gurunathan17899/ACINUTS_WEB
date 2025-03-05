@@ -4,23 +4,18 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
+  Alert,  
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import {useFocusEffect} from '@react-navigation/native';
 import {
   colors,
   primaryFontfamily,
   secondaryFontfamily,
 } from '../../Configuration';
-//import Entypo from 'react-native-vector-icons/Entypo';
 import {GetUserShippingAddress, deleteShippingAddress} from "../../../Network/API";
 import {useContext} from 'react';
 import { MyContext } from '../../../Context/MyContext';
-//import {showMessage} from 'react-native-flash-message';
-//import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import showMessage from '../../Toast';
 
 const AddressInfo = ({navigation}) => {
   const {UserShippingAddress, UserDetails, setUserShippingAddress, Token} =
@@ -29,6 +24,7 @@ const AddressInfo = ({navigation}) => {
   const [visibleMenuId, setVisibleMenuId] = useState(null);
 
   const handleDelete = Address_Code => {
+    
     Alert.alert('Delete Item', 'sure you want to delete this Address?', [
       {text: 'Cancel', style: 'cancel'},
       {
@@ -38,6 +34,7 @@ const AddressInfo = ({navigation}) => {
         },
       },
     ]);
+    
   };
 
   const deleteAPICall = Address_Code => {
@@ -108,7 +105,7 @@ const AddressInfo = ({navigation}) => {
         <TouchableOpacity
           onPress={() => navigation.navigate('ShippingAddress', {item: {}})}
           style={{position: 'absolute', right: 20, flexDirection: 'row'}}>
-            {/*
+          {/*
           <Entypo name="squared-plus" size={20} color={colors.primaryColor} />
           */}
           <Text
@@ -122,22 +119,23 @@ const AddressInfo = ({navigation}) => {
         </TouchableOpacity>
       </View>
 
-      <View
-        style={{
-          width: '100%',
-          marginLeft: 0,
-          marginRight: 20,
-          marginBottom: 100,
-        }}>
-        <FlatList
-          data={shippingAddress}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{paddingLeft: 20, paddingRight: 20}}
-          renderItem={({item}) => (
-            <View style={styles.itemContainer}>
-              <View style={styles.actionsContainer}>
-                <Text style={styles.itemText}>{item.user_name}</Text>
-                {/*
+      {shippingAddress?.length > 0 ? (
+        <View
+          style={{
+            width: '100%',
+            marginLeft: 0,
+            marginRight: 20,
+            marginBottom: 100,
+          }}>
+          <FlatList
+            data={shippingAddress}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{paddingLeft: 20, paddingRight: 20}}
+            renderItem={({item}) => (
+              <View style={styles.itemContainer}>
+                <View style={styles.actionsContainer}>
+                  <Text style={styles.itemText}>{item.user_name}</Text>
+                  {/*
                 <TouchableOpacity
                   style={styles.actionButton}
                   // onPress={() => { setSelectedItem(item); setModalVisible(true); }}
@@ -152,7 +150,7 @@ const AddressInfo = ({navigation}) => {
                   />
                 </TouchableOpacity>
                 */}
-                {/*visibleMenuId === item.Address_Code && (
+                  {/*visibleMenuId === item.Address_Code && (
                   <View style={styles.menuContainer}>
                     <TouchableOpacity
                       style={styles.menuOption}
@@ -173,66 +171,80 @@ const AddressInfo = ({navigation}) => {
                     </TouchableOpacity>
                   </View>
                 )*/}
-              </View>
-              <Text style={styles.addressText}>
-                {`${item.house_no}, ${item.street}, ${item.city}, ${item.landmark},${item.District}, ${item.state} - ${item.pincode}`}
-              </Text>
-              <Text style={styles.phoneText}>Phone: {item.Contact_NO}</Text>
+                </View>
+                <Text style={styles.addressText}>
+                  {`${item.house_no}, ${item.street}, ${item.city}, ${item.landmark},${item.District}, ${item.state} - ${item.pincode}`}
+                </Text>
+                <Text style={styles.phoneText}>Phone: {item.Contact_NO}</Text>
 
-              <View
-                style={{
-                  //alignItems: 'flex-end',
-                  justifyContent: 'flex-end',
-                  marginTop: 16,
-                  flexDirection: 'row',
-                }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('ShippingAddress', {item: item});
-                  }}
+                <View
                   style={{
-                    backgroundColor: colors.primaryColor,
-                    padding: 10,
-                    borderRadius: 12,
-                    marginRight: 8,
-                    width: 75,
-                    alignItems: 'center',
+                    //alignItems: 'flex-end',
+                    justifyContent: 'flex-end',
+                    marginTop: 16,
+                    flexDirection: 'row',
                   }}>
-                  <Text
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('ShippingAddress', {item: item});
+                    }}
                     style={{
-                      color: 'white',
-                      fontFamily: primaryFontfamily,
-                      fontSize: 14,
+                      backgroundColor: colors.primaryColor,
+                      padding: 10,
+                      borderRadius: 12,
+                      marginRight: 8,
+                      width: 75,
+                      alignItems: 'center',
                     }}>
-                    Edit
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    handleDelete(item.Address_Code);
-                  }}
-                  style={{
-                    backgroundColor: colors.primaryColor,
-                    padding: 10,
-                    borderRadius: 12,
-                    marginRight: 8,
-                    width: 75,
-                    alignItems: 'center',
-                  }}>
-                  <Text
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontFamily: primaryFontfamily,
+                        fontSize: 14,
+                      }}>
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleDelete(item.Address_Code);
+                    }}
                     style={{
-                      color: 'white',
-                      fontFamily: primaryFontfamily,
-                      fontSize: 14,
+                      backgroundColor: colors.primaryColor,
+                      padding: 10,
+                      borderRadius: 12,
+                      marginRight: 8,
+                      width: 75,
+                      alignItems: 'center',
                     }}>
-                    Delete
-                  </Text>
-                </TouchableOpacity>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontFamily: primaryFontfamily,
+                        fontSize: 14,
+                      }}>
+                      Delete
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          )}
-        />
-      </View>
+            )}
+          />
+        </View>
+      ) : (
+        <View
+          style={{alignItems: 'center', justifyContent: 'center', height: 200}}>
+          <Text
+            style={{
+              color: colors.primaryColor,
+              fontSize: 16,
+              fontWeight: '400',
+              fontFamily:secondaryFontfamily
+            }}>
+            No address found
+          </Text>
+        </View>
+      )}
 
       {/* <Modal
         transparent={true}

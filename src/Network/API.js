@@ -89,7 +89,7 @@ export const GetUserCartList = token => {
 };
 
 export const AddItemToCartList = (token, itemcode, UOM, QTY, price) => {
-  // /console.log("add to cart param;"+ user_id + " "+ itemcode+ " "+UOM+" "+ QTY+ " "+price)
+  console.log("add to cart param;" + " "+ itemcode+ " "+UOM+" "+ QTY+ " "+price)
   const headers = {Authorization: `Bearer ${token}`};
   return axios
     .post(
